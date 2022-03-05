@@ -1,7 +1,9 @@
-# logback.xml模板，放在项目根目录下
+# logback.xml模板，放在项目根目录下，其中保存路径记得修改
 ```
 <configuration>
+    <!-- 日志保存格式 -->
     <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+    <!-- 日志保存的路径在这里，记得改 -->
     <property name="FILE_PATH" value="F:/Slf4j/QA_System/%d{yyyy-MM-dd}.%i.log" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
