@@ -1,4 +1,5 @@
-# logback.xml模板，放在项目根目录下，其中保存路径记得修改
+# 项目中需要修改的配置
+* logback.xml模板，放在项目根目录下，其中保存路径记得修改
 ```
 <configuration>
     <!-- 日志保存格式 -->
@@ -36,4 +37,12 @@
         <appender-ref ref="FILE" />
     </root>
 </configuration>
+```
+* springboot 配置文件 application.yml
+```
+spring:
+    datasource:
+        username: mysql 数据库用户名
+        password: mysql 数据库密码
+        url: jdbc:mysql://localhost:（端口）/数据库名称
 ```
