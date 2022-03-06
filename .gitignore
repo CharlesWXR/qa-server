@@ -4,8 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-README.md
-logback.xml
+/README.md
+/logback.xml
+/src/main/resources/application.yml
 
 ### STS ###
 .apt_generated
