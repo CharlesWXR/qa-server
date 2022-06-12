@@ -7,16 +7,10 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 @Data
-@TableName("user")
-public class User extends Model<User> {
+@TableName("subject")
+public class Subject extends Model<Subject> {
 	@TableId(type = IdType.AUTO)
-	private int userId;
+	private int subjectId;
 
 	private String name;
-	private String password;
-	private String email;
-	private String phone;
-	private String gender;
-	private int privilege;
-	private int classId;
 }

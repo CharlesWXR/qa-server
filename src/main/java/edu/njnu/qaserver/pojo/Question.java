@@ -5,18 +5,20 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
+import org.joda.time.DateTime;
 
 @Data
-@TableName("user")
-public class User extends Model<User> {
+@TableName("question")
+public class Question extends Model<Question> {
 	@TableId(type = IdType.AUTO)
-	private int userId;
+	private int questionId;
 
-	private String name;
-	private String password;
-	private String email;
-	private String phone;
-	private String gender;
-	private int privilege;
-	private int classId;
+	private DateTime time;
+	private String mainContent;
+	private String title;
+	private String img;
+	private int credit;
+
+	private int userId;
+	private int subjectId;
 }

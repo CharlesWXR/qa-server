@@ -20,7 +20,7 @@ public class MinIOUtil {
 	private String endPoint;
 
 	@Value("${minio.bucket}")
-	private String bucketName;
+	public String bucketName;
 
 	public String uploadFile(InputStream is, String filename, String contentType) {
 		try {
@@ -43,7 +43,6 @@ public class MinIOUtil {
 		try {
 			MinioClient minioClient = new MinioClient(endPoint, accessKey, secretKey);
 			InputStream is = minioClient.getObject(bucketName, filename);
-			log.info("MinIO: {} in {} downloaded success", filename, bucketName);
 			return is;
 		} catch (Exception e) {
 			log.error("MinIO: {} in {} downloaded fail: {}", filename, bucketName, e.getMessage());
@@ -52,9 +51,10 @@ public class MinIOUtil {
 	}
 
 	public String getFileUrl(String bucketName, String filename) {
+		if (filename == null)
+			return null;
 		try {
 			MinioClient minioClient = new MinioClient(endPoint, accessKey, secretKey);
-			log.info("MinIO: {} in {} generate url success", filename, bucketName);
 			return minioClient.presignedGetObject(bucketName, filename);
 		} catch (Exception e) {
 			log.error("MinIO: {} in {} generate url fail: {}", filename, bucketName, e.getMessage());
