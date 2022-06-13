@@ -84,6 +84,7 @@ public class QuestionServiceImpl implements QuestionService {
 			MultipartFile file = (MultipartFile) oFile;
 			String filepath = subject + "/" + FileUploadUtil.generateFileName(file.getOriginalFilename());
 			url = MinIOUtil.uploadFile(file.getInputStream(), filepath, file.getContentType());
+			question.setImg(filepath);
 		}
 
 		question.insert();
