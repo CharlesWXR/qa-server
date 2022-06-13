@@ -28,3 +28,19 @@ minio:
   access-key: admin
   secret-key: password
   bucket: question-answer-system
+
+aliyun:
+  oss:
+    # oss对外服务的访问域名
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    # 访问身份验证中用到用户标识
+    accessKeyId: LTAI5t88yjqRUw7abeNVP7aM
+    # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    accessKeySecret: 6M6OugtmCRc4P9ZwQALKmbq9mpFp01
+    # oss的存储空间
+    bucketName: bosswang-pic
+    # 上传文件大小(M)
+    maxSize: 5
+    # 上传文件夹路径前缀
+    dir:
+      prefix: qa/questions/
