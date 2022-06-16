@@ -50,9 +50,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionBriefsVO getQuestionByUser(int UserID) {
+    public QuestionBriefsVO getQuestionByUser(int userID) {
         QueryWrapper<Question> questionWrapper = new QueryWrapper<>();
-        questionWrapper.eq("user_id", UserID);
+        questionWrapper.eq("user_id", userID);
         List<Question> questionList = questionMapper.selectList(questionWrapper);
 
         return getBriefsFromList(questionList);
@@ -78,7 +78,7 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionBriefsVO getBriefsFromList(List<Question> questionList) {
         List<QuestionBriefVO> briefs = questionList.stream()
                 .peek(img -> img.setImg(MinIOUtil.getFileUrl(MinIOUtil.bucketName, img.getImg())))
-                .map(QuestionBriefVO::new)
+                .map(t -> new QuestionBriefVO(t, subjectService.getSubjectNameByID(t.getSubjectId())))
                 .collect(Collectors.toList());
 
         QuestionBriefsVO res = new QuestionBriefsVO();

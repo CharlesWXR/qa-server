@@ -29,9 +29,9 @@ public class QuestionController {
     }
 
     @ResponseResult
-    @RequestMapping(value = "/{UserID}", method = RequestMethod.GET)
-    public QuestionBriefsVO getQuestionByUser(@PathVariable int UserID) {
-        return questionService.getQuestionByUser(UserID);
+    @RequestMapping(value = "/{userID}", method = RequestMethod.GET)
+    public QuestionBriefsVO getQuestionByUser(@PathVariable int userID) {
+        return questionService.getQuestionByUser(userID);
     }
 
     @ResponseResult

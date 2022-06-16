@@ -8,7 +8,7 @@ public interface QuestionService {
 
 	QuestionBriefsVO getQuestionsBySubjectName(String subjectName, long page);
 
-	QuestionBriefsVO getQuestionByUser(int UserID);
+	QuestionBriefsVO getQuestionByUser(int userID);
 
 	String putNewQuestion(String title, String mainContent,
 	                      String subject, int credit,
