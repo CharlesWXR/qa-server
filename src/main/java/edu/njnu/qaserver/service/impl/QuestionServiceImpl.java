@@ -19,75 +19,95 @@ import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
-	@Autowired
-	private QuestionMapper questionMapper;
+    @Autowired
+    private QuestionMapper questionMapper;
 
-	@Autowired
-	private SubjectService subjectService;
+    @Autowired
+    private SubjectService subjectService;
 
-	@Autowired
-	private MinIOUtil MinIOUtil;
+    @Autowired
+    private MinIOUtil MinIOUtil;
 
-	private final int PageSize = 20;
+    private final int PageSize = 20;
 
-	@Override
-	public QuestionBriefsVO getAllQuestions(long page) {
-		Page<Question> questionPage = questionMapper.selectPage(new Page<Question>(page, PageSize),
-				null);
-		return getBriefsFromPage(questionPage);
-	}
+    @Override
+    public QuestionBriefsVO getAllQuestions(long page) {
+        Page<Question> questionPage = questionMapper.selectPage(new Page<Question>(page, PageSize),
+                null);
+        return getBriefsFromPage(questionPage);
+    }
 
-	@Override
-	public QuestionBriefsVO getQuestionsBySubjectName(String subjectName, long page) {
-		int subjectID = subjectService.getSubjectIDByName(subjectName);
+    @Override
+    public QuestionBriefsVO getQuestionsBySubjectName(String subjectName, long page) {
+        int subjectID = subjectService.getSubjectIDByName(subjectName);
 
-		QueryWrapper<Question> questionWrapper = new QueryWrapper<Question>();
-		questionWrapper.eq("subject_id", subjectID);
-		Page<Question> questionPage = questionMapper.selectPage(new Page<Question>(page, PageSize),
-					questionWrapper);
+        QueryWrapper<Question> questionWrapper = new QueryWrapper<Question>();
+        questionWrapper.eq("subject_id", subjectID);
+        Page<Question> questionPage = questionMapper.selectPage(new Page<Question>(page, PageSize),
+                questionWrapper);
 
-		return getBriefsFromPage(questionPage);
-	}
+        return getBriefsFromPage(questionPage);
+    }
 
-	private QuestionBriefsVO getBriefsFromPage(Page<Question> questionPage) {
-		List<Question> questions = questionPage.getRecords();
+    @Override
+    public QuestionBriefsVO getQuestionByUser(int UserID) {
+        QueryWrapper<Question> questionWrapper = new QueryWrapper<>();
+        questionWrapper.eq("user_id", UserID);
+        List<Question> questionList = questionMapper.selectList(questionWrapper);
 
-		long totalPageCount = questionPage.getPages();
-		long totalCount = questionPage.getTotal();
-		List<QuestionBriefVO> briefs = questions.stream()
-				.peek(t -> t.setImg(MinIOUtil.getFileUrl(MinIOUtil.bucketName, t.getImg())))
-				.map(QuestionBriefVO::new)
-				.collect(Collectors.toList());
+        return getBriefsFromList(questionList);
+    }
 
-		QuestionBriefsVO res = new QuestionBriefsVO();
-		res.setPage_count(totalPageCount);
-		res.setTotal_count(totalCount);
-		res.setQuestions(briefs);
-		return res;
-	}
+    private QuestionBriefsVO getBriefsFromPage(Page<Question> questionPage) {
+        List<Question> questions = questionPage.getRecords();
 
-	@Override
-	public String putNewQuestion(String title, String mainContent,
-	                             String subject, int credit,
-	                             int userID, Object oFile)
-			throws Exception {
-		Question question = new Question();
-		question.setTitle(title);
-		question.setMainContent(mainContent);
-		question.setCredit(credit);
-		question.setUserId(userID);
-		question.setSubjectId(subjectService.getSubjectIDByName(subject));
-		question.setImg(null);
+        long totalPageCount = questionPage.getPages();
+        long totalCount = questionPage.getTotal();
+        List<QuestionBriefVO> briefs = questions.stream()
+                .peek(t -> t.setImg(MinIOUtil.getFileUrl(MinIOUtil.bucketName, t.getImg())))
+                .map(QuestionBriefVO::new)
+                .collect(Collectors.toList());
 
-		String url = null;
-		if (oFile != null) {
-			MultipartFile file = (MultipartFile) oFile;
-			String filepath = subject + "/" + FileUploadUtil.generateFileName(file.getOriginalFilename());
-			url = MinIOUtil.uploadFile(file.getInputStream(), filepath, file.getContentType());
-			question.setImg(filepath);
-		}
+        QuestionBriefsVO res = new QuestionBriefsVO();
+        res.setPage_count(totalPageCount);
+        res.setTotal_count(totalCount);
+        res.setQuestions(briefs);
+        return res;
+    }
 
-		question.insert();
-		return url;
-	}
+    private QuestionBriefsVO getBriefsFromList(List<Question> questionList) {
+        List<QuestionBriefVO> briefs = questionList.stream()
+                .peek(img -> img.setImg(MinIOUtil.getFileUrl(MinIOUtil.bucketName, img.getImg())))
+                .map(QuestionBriefVO::new)
+                .collect(Collectors.toList());
+
+        QuestionBriefsVO res = new QuestionBriefsVO();
+        res.setQuestions(briefs);
+        return res;
+    }
+
+    @Override
+    public String putNewQuestion(String title, String mainContent,
+                                 String subject, int credit,
+                                 int userID, Object oFile)
+            throws Exception {
+        Question question = new Question();
+        question.setTitle(title);
+        question.setMainContent(mainContent);
+        question.setCredit(credit);
+        question.setUserId(userID);
+        question.setSubjectId(subjectService.getSubjectIDByName(subject));
+        question.setImg(null);
+
+        String url = null;
+        if (oFile != null) {
+            MultipartFile file = (MultipartFile) oFile;
+            String filepath = subject + "/" + FileUploadUtil.generateFileName(file.getOriginalFilename());
+            url = MinIOUtil.uploadFile(file.getInputStream(), filepath, file.getContentType());
+            question.setImg(filepath);
+        }
+
+        question.insert();
+        return url;
+    }
 }
