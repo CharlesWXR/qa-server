@@ -1,7 +1,9 @@
 package edu.njnu.qaserver.utils;
 
-import io.minio.MinioClient;
+import io.minio.*;
+import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,29 +12,33 @@ import java.io.InputStream;
 @Slf4j
 @Component
 public class MinIOUtil {
-	@Value("${minio.access-key}")
-	private String accessKey;
-
-	@Value("${minio.secret-key}")
-	private String secretKey;
-
-	@Value("${minio.server}")
-	private String endPoint;
+	@Autowired
+	private MinioClient minioClient;
 
 	@Value("${minio.bucket}")
-	public String bucketName;
+	private String bucketName;
 
 	public String uploadFile(InputStream is, String filename, String contentType) {
 		try {
-			MinioClient minioClient = new MinioClient(endPoint, accessKey, secretKey);
-			boolean exist = minioClient.bucketExists(bucketName);
+			boolean exist = minioClient.bucketExists(
+					BucketExistsArgs.builder()
+							.bucket(bucketName)
+							.build());
 			if (!exist) {
-				minioClient.makeBucket(bucketName);
+				minioClient.makeBucket(MakeBucketArgs
+						.builder()
+						.bucket(bucketName)
+						.build());
 			}
-			minioClient.putObject(bucketName, filename, is, contentType);
+			minioClient.putObject(PutObjectArgs.builder()
+					.bucket(bucketName)
+					.object(filename)
+					.stream(is, is.available(), -1)
+					.contentType(contentType)
+					.build());
 			is.close();
 			log.info("MinIO: {} in {} upload success", filename, bucketName);
-			return getFileUrl(bucketName, filename);
+			return getFileUrl(filename);
 		} catch (Exception e) {
 			log.error("MinIO: {} in {} upload fail: {}", filename, bucketName, e.getMessage());
 			return null;
@@ -41,8 +47,11 @@ public class MinIOUtil {
 
 	public InputStream downloadFile(String filename) {
 		try {
-			MinioClient minioClient = new MinioClient(endPoint, accessKey, secretKey);
-			InputStream is = minioClient.getObject(bucketName, filename);
+			InputStream is = minioClient.getObject(
+					GetObjectArgs.builder()
+							.bucket(bucketName)
+							.object(filename)
+							.build());
 			return is;
 		} catch (Exception e) {
 			log.error("MinIO: {} in {} downloaded fail: {}", filename, bucketName, e.getMessage());
@@ -50,12 +59,16 @@ public class MinIOUtil {
 		}
 	}
 
-	public String getFileUrl(String bucketName, String filename) {
+	public String getFileUrl(String filename) {
 		if (filename == null)
 			return null;
 		try {
-			MinioClient minioClient = new MinioClient(endPoint, accessKey, secretKey);
-			return minioClient.presignedGetObject(bucketName, filename);
+			return minioClient.getPresignedObjectUrl(
+					GetPresignedObjectUrlArgs.builder()
+							.method(Method.GET)
+							.bucket(bucketName)
+							.object(filename)
+							.build());
 		} catch (Exception e) {
 			log.error("MinIO: {} in {} generate url fail: {}", filename, bucketName, e.getMessage());
 			return null;

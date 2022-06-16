@@ -64,7 +64,7 @@ public class QuestionServiceImpl implements QuestionService {
         long totalPageCount = questionPage.getPages();
         long totalCount = questionPage.getTotal();
         List<QuestionBriefVO> briefs = questions.stream()
-                .peek(t -> t.setImg(MinIOUtil.getFileUrl(MinIOUtil.bucketName, t.getImg())))
+                .peek(t -> t.setImg(MinIOUtil.getFileUrl(t.getImg())))
                 .map(QuestionBriefVO::new)
                 .collect(Collectors.toList());
 
@@ -77,7 +77,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     private QuestionBriefsVO getBriefsFromList(List<Question> questionList) {
         List<QuestionBriefVO> briefs = questionList.stream()
-                .peek(img -> img.setImg(MinIOUtil.getFileUrl(MinIOUtil.bucketName, img.getImg())))
+                .peek(img -> img.setImg(MinIOUtil.getFileUrl(img.getImg())))
                 .map(t -> new QuestionBriefVO(t, subjectService.getSubjectNameByID(t.getSubjectId())))
                 .collect(Collectors.toList());
 
