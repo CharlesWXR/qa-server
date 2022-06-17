@@ -57,6 +57,13 @@ public class QuestionServiceImpl implements QuestionService {
 
         return getBriefsFromList(questionList);
     }
+    public Question getQuestionByQuestionID(int questionID) {
+        QueryWrapper<Question> questionWrapper = new QueryWrapper<>();
+        questionWrapper.eq("question_id", questionID);
+        Question question = questionMapper.selectOne(questionWrapper);
+
+        return question;
+    }
 
     private QuestionBriefsVO getBriefsFromPage(Page<Question> questionPage) {
         List<Question> questions = questionPage.getRecords();

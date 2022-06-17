@@ -1,6 +1,7 @@
 package edu.njnu.qaserver.controller;
 
 import edu.njnu.qaserver.annotation.ResponseResult;
+import edu.njnu.qaserver.pojo.Question;
 import edu.njnu.qaserver.pojo.QuestionBriefsVO;
 import edu.njnu.qaserver.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class QuestionController {
     @RequestMapping(value = "/{userID}", method = RequestMethod.GET)
     public QuestionBriefsVO getQuestionByUser(@PathVariable int userID) {
         return questionService.getQuestionByUser(userID);
+    }
+    @ResponseResult
+    @RequestMapping(value = "/{questionID}", method = RequestMethod.GET)
+    public Question getQuestionByQuestionID(@PathVariable int questionID) {
+        return questionService.getQuestionByQuestionID(questionID);
     }
 
     @ResponseResult

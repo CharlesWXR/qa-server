@@ -9,7 +9,7 @@ public interface QuestionService {
 	QuestionBriefsVO getQuestionsBySubjectName(String subjectName, long page);
 
 	QuestionBriefsVO getQuestionByUser(int userID);
-
+	Question getQuestionByQuestionID(int questionID);
 	String putNewQuestion(String title, String mainContent,
 	                      String subject, int credit,
 	                      int userID, Object oFile) throws Exception;
