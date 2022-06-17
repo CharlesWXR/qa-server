@@ -32,9 +32,9 @@ public class UserController {
 
     @ResponseResult
     @RequestMapping(value = "/register", method = RequestMethod.PUT)
-    public Map<String, Object> register(HttpServletRequest request) throws Exception {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+    public Map<String, Object> register(@RequestBody Map<String ,String >params) throws Exception {
+        String username = params.get("name");
+        String password = params.get("password");
 
         Map<String, Object> res = new HashMap<>();
         res.put("new_user", userService.register(username, password));
