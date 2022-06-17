@@ -10,19 +10,28 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-	@Autowired
-	UserMapper userMapper;
+    @Autowired
+    UserMapper userMapper;
 
-	@Override
-	public UserLoginVO login(String userName, String password) {
-		QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
-		queryWrapper.eq("name", userName);
-		queryWrapper.eq("password", password);
+    @Override
+    public UserLoginVO login(String userName, String password) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
+        queryWrapper.eq("name", userName);
+        queryWrapper.eq("password", password);
 
-		User user = userMapper.selectOne(queryWrapper);
-		if (user == null)
-			return null;
-		else
-			return new UserLoginVO(user);
-	}
+        User user = userMapper.selectOne(queryWrapper);
+        if (user == null)
+            return null;
+        else
+            return new UserLoginVO(user);
+    }
+
+    @Override
+    public Object register(String username, String password) {
+        User user = new User();
+        user.setName(username);
+        user.setPassword(password);
+        user.insert();
+        return user;
+    }
 }
