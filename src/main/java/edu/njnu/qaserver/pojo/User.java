@@ -14,10 +14,12 @@ public class User extends Model<User> {
 
 	private String name;
 	private String password;
-	private String email;
+	private String Email;
 	private String phone;
 	private String gender;
 	private String avatar;
+	private String home;
+
 	private int privilege;
 	private int classId;
 }

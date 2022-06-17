@@ -4,6 +4,7 @@ import edu.njnu.qaserver.pojo.QuestionBriefsVO;
 import edu.njnu.qaserver.pojo.SubjectQuestionStat;
 
 import java.util.List;
+import edu.njnu.qaserver.pojo.QuestionVO;
 
 public interface QuestionService {
 	QuestionBriefsVO getAllQuestions(long page);
@@ -18,6 +19,7 @@ public interface QuestionService {
 	List<String> completeQuestion(String target, String subjectName);
 	List<String> completeQuestion(String target, String subjectName, List<Integer> tagIDs);
 
+	QuestionVO getQuestionByQuestionID(int questionID);
 	String putNewQuestion(String title, String mainContent,
 	                      String subject, int credit,
 	                      int userID, Object oFile) throws Exception;
