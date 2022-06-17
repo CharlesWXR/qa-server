@@ -7,24 +7,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@ResponseResult
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public UserLoginVO login(@RequestBody Map<String, String> params) throws Exception {
-		if (!params.containsKey("username"))
-			throw new MissingServletRequestParameterException("username", "String");
-		if (!params.containsKey("password"))
-			throw new MissingServletRequestParameterException("password", "String");
+    @ResponseResult
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public UserLoginVO login(@RequestBody Map<String, String> params) throws Exception {
+        if (!params.containsKey("username"))
+            throw new MissingServletRequestParameterException("username", "String");
+        if (!params.containsKey("password"))
+            throw new MissingServletRequestParameterException("password", "String");
 
-		String userName = params.get("username");
-		String password = params.get("password");
-		return userService.login(userName, password);
-	}
+        String userName = params.get("username");
+        String password = params.get("password");
+        return userService.login(userName, password);
+    }
+
+    @ResponseResult
+    @RequestMapping(value = "/register", method = RequestMethod.PUT)
+    public Map<String, Object> register(HttpServletRequest request) throws Exception {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("new_user", userService.register(username, password));
+        return res;
+    }
 }
