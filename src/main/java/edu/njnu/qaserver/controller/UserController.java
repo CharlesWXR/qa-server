@@ -32,12 +32,27 @@ public class UserController {
 
     @ResponseResult
     @RequestMapping(value = "/register", method = RequestMethod.PUT)
-    public Map<String, Object> register(@RequestBody Map<String ,String >params) throws Exception {
+    public Map<String, Object> register(@RequestBody Map<String, String> params) throws Exception {
         String username = params.get("name");
         String password = params.get("password");
 
         Map<String, Object> res = new HashMap<>();
         res.put("new_user", userService.register(username, password));
+        return res;
+    }
+
+    @ResponseResult
+    @RequestMapping(value = "/edit", method = RequestMethod.PUT)
+    public Map<String, Object> editProfile(@RequestBody Map<String, String> params) throws Exception {
+        int user_id = Integer.parseInt(params.get("userID"));
+        String name = params.get("name");
+        String email = params.get("email");
+        String phone = params.get("phone");
+        String gender = params.get("gender");
+        String home = params.get("home");
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("edit_profile", userService.editProfile(user_id, name, email, phone, gender, home));
         return res;
     }
 }
