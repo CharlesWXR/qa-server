@@ -8,6 +8,7 @@ import java.util.Map;
 
 public interface TagService {
 	List<Tag> getTagsBySubjectID(int id);
+	List<Tag> getTagsByQuestionID(int id);
 
 	Map<String, List<TagVO>> getTags();
 }

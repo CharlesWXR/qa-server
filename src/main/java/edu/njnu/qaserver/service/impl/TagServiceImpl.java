@@ -34,6 +34,11 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
+	public List<Tag> getTagsByQuestionID(int id) {
+		return tagMapper.getTagsByQuestionID(id);
+	}
+
+	@Override
 	public Map<String, List<TagVO>> getTags() {
 		if (subjectNameTagMapper == null) {
 			loadTags();

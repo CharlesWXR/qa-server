@@ -3,11 +3,7 @@ package edu.njnu.qaserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.njnu.qaserver.mapper.QuestionMapper;
-import edu.njnu.qaserver.pojo.Question;
-import edu.njnu.qaserver.pojo.QuestionBriefVO;
-import edu.njnu.qaserver.pojo.QuestionBriefsVO;
-import edu.njnu.qaserver.pojo.SubjectQuestionStat;
-import edu.njnu.qaserver.pojo.QuestionVO;
+import edu.njnu.qaserver.pojo.*;
 import edu.njnu.qaserver.service.QuestionService;
 import edu.njnu.qaserver.service.SubjectService;
 import edu.njnu.qaserver.service.TagService;
@@ -18,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,8 +75,8 @@ public class QuestionServiceImpl implements QuestionService {
 			questionWrapper.eq("subject_id", subjectID)
 					.and(wrapper ->
 							wrapper.like("main_content", target)
-							.or()
-							.like("title", target));
+									.or()
+									.like("title", target));
 		}
 
 		Page<Question> questionPage = questionMapper.selectPage(
@@ -152,7 +149,23 @@ public class QuestionServiceImpl implements QuestionService {
 		long totalCount = questionPage.getTotal();
 		List<QuestionBriefVO> briefs = questions.stream()
 				.peek(t -> t.setImg(MinIOUtil.getFileUrl(t.getImg())))
-				.map(QuestionBriefVO::new)
+				.map(t ->
+						new QuestionBriefVO(t,
+						tagService.getTagsByQuestionID(t.getQuestionId())
+								.stream()
+								.map(new Function<Tag, SubjectTagPairVO>() {
+
+									@Override
+									public SubjectTagPairVO apply(Tag tag) {
+										SubjectTagPairVO res = new SubjectTagPairVO();
+										res.setSubject_name(subjectService.getSubjectNameByID(tag.getSubjectId()));
+										res.setTag_name(tag.getName());
+										return res;
+									}
+								})
+								.collect(Collectors.toList())
+						)
+				)
 				.collect(Collectors.toList());
 
 		QuestionBriefsVO res = new QuestionBriefsVO();

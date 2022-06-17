@@ -3,6 +3,7 @@ package edu.njnu.qaserver.pojo;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class QuestionBriefVO {
@@ -15,6 +16,7 @@ public class QuestionBriefVO {
 	private String img_src;
 	private Date time;
 	private String subject_name;
+	private List<SubjectTagPairVO> tags;
 
 	public QuestionBriefVO() {
 	}
@@ -31,5 +33,10 @@ public class QuestionBriefVO {
 	public QuestionBriefVO(Question q, String subjectName) {
 		this(q);
 		this.subject_name = subjectName;
+	}
+
+	public QuestionBriefVO(Question q, List<SubjectTagPairVO> tags) {
+		this(q);
+		this.tags = tags;
 	}
 }

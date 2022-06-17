@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.njnu.qaserver.mapper.TagMapper">
+    <select id="getTagsByQuestionID" resultType="edu.njnu.qaserver.pojo.Tag">
+        SELECT
+            t.`tag_id` AS `tag_id`,
+            t.`name` AS `name`,
+            t.`subject_id` AS `subject_id`
+        FROM
+            question_tag_linker l JOIN tag t ON l.`tag_id` = t.`tag_id`
+        WHERE
+            l.question_id = #{questionID}
+    </select>
+</mapper>

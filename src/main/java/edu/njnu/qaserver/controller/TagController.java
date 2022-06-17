@@ -1,7 +1,6 @@
 package edu.njnu.qaserver.controller;
 
 import edu.njnu.qaserver.annotation.ResponseResult;
-import edu.njnu.qaserver.pojo.Tag;
 import edu.njnu.qaserver.pojo.TagVO;
 import edu.njnu.qaserver.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
