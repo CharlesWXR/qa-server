@@ -1,7 +1,6 @@
 package edu.njnu.qaserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.njnu.qaserver.mapper.QuestionMapper;
 import edu.njnu.qaserver.pojo.Question;
@@ -35,6 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
 	private MinIOUtil MinIOUtil;
 
 	private final int PageSize = 20;
+	private final int CompletionPageSize = 10;
 
 	@Override
 	public QuestionBriefsVO getAllQuestions(long page) {
@@ -65,23 +65,68 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	public QuestionBriefsVO searchQuestion(String target, long page) {
+	public QuestionBriefsVO searchQuestion(String target, String subjectName, long page) {
 		QueryWrapper<Question> questionWrapper = new QueryWrapper<Question>();
-		questionWrapper.like("main_content", target)
-				.or()
-				.like("title", target);
+		if (subjectName.equals("全部")) {
+			questionWrapper.like("main_content", target)
+					.or()
+					.like("title", target);
+		} else {
+			int subjectID = subjectService.getSubjectIDByName(subjectName);
+			questionWrapper.eq("subject_id", subjectID)
+					.and(wrapper ->
+							wrapper.like("main_content", target)
+							.or()
+							.like("title", target));
+		}
 
-		Page<Question> questionPage = questionMapper.selectPage(new Page<Question>(page, PageSize),
+		Page<Question> questionPage = questionMapper.selectPage(
+				new Page<Question>(page, PageSize),
 				questionWrapper);
 
 		return getBriefsFromPage(questionPage);
 	}
 
 	@Override
-	public QuestionBriefsVO searchQuestion(String target, List<Integer> tagIDs, long page) {
+	public QuestionBriefsVO searchQuestion(String target, String subjectName, List<Integer> tagIDs, long page) {
+		int subjectID = 0;
+		if (!subjectName.equals("全部"))
+			subjectID = subjectService.getSubjectIDByName(subjectName);
+
 		Page<Question> questionPage = questionMapper.searchQuestion(new Page<Question>(page, PageSize),
-				target, tagIDs);
+				subjectID, target, tagIDs);
 		return getBriefsFromPage(questionPage);
+	}
+
+	@Override
+	public List<String> completeQuestion(String target, String subjectName) {
+		QueryWrapper<Question> questionWrapper = new QueryWrapper<Question>();
+		questionWrapper.select("title");
+		questionWrapper.like("title", target);
+
+		if (!subjectName.equals("全部")) {
+			int subjectID = subjectService.getSubjectIDByName(subjectName);
+			questionWrapper.eq("subject_id", subjectID);
+		}
+
+		Page<Question> result = questionMapper.selectPage(
+				new Page<Question>(1, CompletionPageSize),
+				questionWrapper);
+
+		return getTitleFromPage(result);
+	}
+
+	@Override
+	public List<String> completeQuestion(String target, String subjectName, List<Integer> tagIDs) {
+		int subjectID = 0;
+		if (!subjectName.equals("全部"))
+			subjectID = subjectService.getSubjectIDByName(subjectName);
+
+		Page<Question> result = questionMapper.completeQuestion(
+				new Page<Question>(1, CompletionPageSize),
+				subjectID, target, tagIDs);
+
+		return getTitleFromPage(result);
 	}
 
 	private QuestionBriefsVO getBriefsFromPage(Page<Question> questionPage) {
@@ -98,6 +143,14 @@ public class QuestionServiceImpl implements QuestionService {
 		res.setPage_count(totalPageCount);
 		res.setTotal_count(totalCount);
 		res.setQuestions(briefs);
+		return res;
+	}
+
+	private List<String> getTitleFromPage(Page<Question> questionPage) {
+		List<String> res = questionPage.getRecords()
+				.stream()
+				.map(t -> t.getTitle())
+				.collect(Collectors.toList());
 		return res;
 	}
 

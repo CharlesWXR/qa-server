@@ -23,13 +23,35 @@
             q.title AS `title`
         FROM
             question q JOIN question_tag_linker l ON q.question_id = l.question_id
-        WHERE
+        <where>
             (q.`title` LIKE concat('%', #{target}, '%') ESCAPE '/'
             OR q.`main_content` LIKE concat('%', #{target}, '%') ESCAPE '/')
             AND l.tag_id IN
-                <foreach collection="tagIDs" item="tagID" index="index" open="(" separator="," close=")">
-                    #{tagID}
-                </foreach>
+            <foreach collection="tagIDs" item="tagID" index="index" open="(" separator="," close=")">
+                #{tagID}
+            </foreach>
+            <if test="subjectID != 0">
+                AND q.subject_id = #{subjectID}
+            </if>
+        </where>
+    </select>
+
+    <select id="completeQuestion" resultType="edu.njnu.qaserver.pojo.Question">
+        SELECT
+            q.title AS `title`
+        FROM
+        question q JOIN question_tag_linker l ON q.question_id = l.question_id
+        <where>
+            (q.`title` LIKE concat('%', #{target}, '%') ESCAPE '/'
+            OR q.`main_content` LIKE concat('%', #{target}, '%') ESCAPE '/')
+            AND l.tag_id IN
+            <foreach collection="tagIDs" item="tagID" index="index" open="(" separator="," close=")">
+                #{tagID}
+            </foreach>
+            <if test="subjectID != 0">
+                AND q.subject_id = #{subjectID}
+            </if>
+        </where>
     </select>
 
     <resultMap id="statMap" type="edu.njnu.qaserver.pojo.SubjectQuestionStat">

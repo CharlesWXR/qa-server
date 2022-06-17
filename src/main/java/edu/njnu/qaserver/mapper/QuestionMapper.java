@@ -11,5 +11,6 @@ import java.util.List;
 public interface QuestionMapper extends BaseMapper<Question> {
 	List<SubjectQuestionStat> getQuestionCounts();
 
-	Page<Question> searchQuestion(IPage<Question> page, String target, List<Integer> tagIDs);
+	Page<Question> searchQuestion(IPage<Question> page, int subjectID, String target, List<Integer> tagIDs);
+	Page<Question> completeQuestion(IPage<Question> page, int subjectID, String target, List<Integer> tagIDs);
 }

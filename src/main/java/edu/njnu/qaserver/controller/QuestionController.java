@@ -60,11 +60,23 @@ public class QuestionController {
 	@ResponseResult
 	@RequestMapping(value = "/s", method = RequestMethod.GET)
 	public QuestionBriefsVO searchQuestion(@RequestParam String content,
+	                                            @RequestParam String subjectName,
 	                                            @RequestParam List<Integer> tags,
 	                                            @RequestParam long page) {
 		if (tags != null && tags.size() > 0)
-			return questionService.searchQuestion(content, tags, page);
+			return questionService.searchQuestion(content, subjectName, tags, page);
 		else
-			return questionService.searchQuestion(content, page);
+			return questionService.searchQuestion(content, subjectName, page);
+	}
+
+	@ResponseResult
+	@RequestMapping(value = "/c", method = RequestMethod.GET)
+	public List<String> completeQuestion(@RequestParam String content,
+	                                     @RequestParam String subjectName,
+	                                     @RequestParam List<Integer> tags) {
+		if (tags != null && tags.size() > 0)
+			return questionService.completeQuestion(content, subjectName, tags);
+		else
+			return questionService.completeQuestion(content, subjectName);
 	}
 }
