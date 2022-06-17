@@ -6,6 +6,7 @@ import edu.njnu.qaserver.mapper.QuestionMapper;
 import edu.njnu.qaserver.pojo.Question;
 import edu.njnu.qaserver.pojo.QuestionBriefVO;
 import edu.njnu.qaserver.pojo.QuestionBriefsVO;
+import edu.njnu.qaserver.pojo.QuestionVO;
 import edu.njnu.qaserver.service.QuestionService;
 import edu.njnu.qaserver.service.SubjectService;
 import edu.njnu.qaserver.utils.FileUploadUtil;
@@ -57,12 +58,18 @@ public class QuestionServiceImpl implements QuestionService {
 
         return getBriefsFromList(questionList);
     }
-    public Question getQuestionByQuestionID(int questionID) {
+    @Override
+    public QuestionVO getQuestionByQuestionID(int questionID) {
         QueryWrapper<Question> questionWrapper = new QueryWrapper<>();
         questionWrapper.eq("question_id", questionID);
         Question question = questionMapper.selectOne(questionWrapper);
 
-        return question;
+        question.setImg(MinIOUtil.getFileUrl(question.getImg()));
+
+        QuestionVO result = new QuestionVO(question);
+        result.setSubject_name(subjectService.getSubjectNameByID(question.getSubjectId()));
+
+        return result;
     }
 
     private QuestionBriefsVO getBriefsFromPage(Page<Question> questionPage) {

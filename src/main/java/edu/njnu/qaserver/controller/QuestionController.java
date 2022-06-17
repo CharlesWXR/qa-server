@@ -3,6 +3,7 @@ package edu.njnu.qaserver.controller;
 import edu.njnu.qaserver.annotation.ResponseResult;
 import edu.njnu.qaserver.pojo.Question;
 import edu.njnu.qaserver.pojo.QuestionBriefsVO;
+import edu.njnu.qaserver.pojo.QuestionVO;
 import edu.njnu.qaserver.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +36,8 @@ public class QuestionController {
         return questionService.getQuestionByUser(userID);
     }
     @ResponseResult
-    @RequestMapping(value = "/{questionID}", method = RequestMethod.GET)
-    public Question getQuestionByQuestionID(@PathVariable int questionID) {
+    @RequestMapping(value = "/id/{questionID}", method = RequestMethod.GET)
+    public QuestionVO getQuestionByQuestionID(@PathVariable int questionID) {
         return questionService.getQuestionByQuestionID(questionID);
     }
 
