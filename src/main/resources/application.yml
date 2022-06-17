@@ -8,7 +8,7 @@ spring:
     username: root
     password: BossWang!
     url: jdbc:mysql://rm-bp1i87cgumh7wwxtg7o.mysql.rds.aliyuncs.com:3306/qa_system?serverTimezone=UTC
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
   servlet:
@@ -17,8 +17,8 @@ spring:
       max-request-size: 1024MB
       enabled: true
 
-  EnableAutoConfiguration:
-    exclude: org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration
+mybatis-plus:
+  mapper-locations: classpath:edu/njnu/qaserver/mapper/xml/*.xml
 
 logging:
   config: logback.xml
