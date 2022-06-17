@@ -1,6 +1,7 @@
 package edu.njnu.qaserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import edu.njnu.qaserver.mapper.UserMapper;
 import edu.njnu.qaserver.pojo.User;
 import edu.njnu.qaserver.pojo.UserLoginVO;
@@ -32,6 +33,20 @@ public class UserServiceImpl implements UserService {
         user.setName(name);
         user.setPassword(password);
         user.insert();
+        return user;
+    }
+
+    @Override
+    public Object editProfile(int userID, String name, String email, String phone, String gender, String home) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        User user = new User();
+        updateWrapper.eq("user_id", userID);
+        user.setName(name);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setGender(gender);
+        user.setHome(home);
+        user.update(updateWrapper);
         return user;
     }
 }
