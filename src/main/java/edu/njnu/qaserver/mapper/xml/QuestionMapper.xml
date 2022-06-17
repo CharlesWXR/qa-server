@@ -4,11 +4,32 @@
     <select id="getQuestionCounts" resultMap="statMap">
         SELECT
             subject_id,
-            count(subject_id) as `count`
+            count(subject_id) AS `count`
         FROM
             question
         GROUP BY
             subject_id
+    </select>
+
+    <select id="searchQuestion" resultType="edu.njnu.qaserver.pojo.Question">
+        SELECT
+            q.question_id AS `question_id`,
+            q.time AS `time`,
+            q.main_content AS `main_content`,
+            q.img AS `img`,
+            q.credit AS `credit`,
+            q.user_id AS `user_id`,
+            q.subject_id AS `subject_id`,
+            q.title AS `title`
+        FROM
+            question q JOIN question_tag_linker l ON q.question_id = l.question_id
+        WHERE
+            (q.`title` LIKE concat('%', #{target}, '%') ESCAPE '/'
+            OR q.`main_content` LIKE concat('%', #{target}, '%') ESCAPE '/')
+            AND l.tag_id IN
+                <foreach collection="tagIDs" item="tagID" index="index" open="(" separator="," close=")">
+                    #{tagID}
+                </foreach>
     </select>
 
     <resultMap id="statMap" type="edu.njnu.qaserver.pojo.SubjectQuestionStat">

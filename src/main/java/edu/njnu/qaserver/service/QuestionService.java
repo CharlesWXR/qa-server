@@ -1,6 +1,5 @@
 package edu.njnu.qaserver.service;
 
-import edu.njnu.qaserver.pojo.Question;
 import edu.njnu.qaserver.pojo.QuestionBriefsVO;
 import edu.njnu.qaserver.pojo.SubjectQuestionStat;
 
@@ -12,6 +11,9 @@ public interface QuestionService {
 	QuestionBriefsVO getQuestionsBySubjectName(String subjectName, long page);
 
 	QuestionBriefsVO getQuestionByUser(int userID);
+
+	QuestionBriefsVO searchQuestion(String target, long page);
+	QuestionBriefsVO searchQuestion(String target, List<Integer> tagIDs, long page);
 
 	String putNewQuestion(String title, String mainContent,
 	                      String subject, int credit,
