@@ -1,9 +1,11 @@
 package edu.njnu.qaserver.controller;
 
 import edu.njnu.qaserver.annotation.ResponseResult;
+import edu.njnu.qaserver.pojo.AnswerVO;
 import edu.njnu.qaserver.pojo.Question;
 import edu.njnu.qaserver.pojo.QuestionBriefsVO;
 import edu.njnu.qaserver.pojo.QuestionVO;
+import edu.njnu.qaserver.service.AnswerService;
 import edu.njnu.qaserver.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,6 +22,9 @@ import java.util.Map;
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private AnswerService answerService;
 
     @ResponseResult
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -54,5 +60,11 @@ public class QuestionController {
         Map<String, Object> res = new HashMap<String, Object>();
         res.put("url", questionService.putNewQuestion(title, mainContent, subject, credit, userID, file));
         return res;
+    }
+
+    @ResponseResult
+    @RequestMapping(value="/answer/{questionID}",method = RequestMethod.GET)
+    public List<AnswerVO> getAnswerByQuestionID(@PathVariable("questionID") int questionID){
+        return answerService.getAnswerByQuestionID(questionID);
     }
 }
