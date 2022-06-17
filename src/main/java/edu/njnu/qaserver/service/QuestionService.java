@@ -22,7 +22,8 @@ public interface QuestionService {
 	QuestionVO getQuestionByQuestionID(int questionID);
 	String putNewQuestion(String title, String mainContent,
 	                      String subject, int credit,
-	                      int userID, Object oFile) throws Exception;
+	                      int userID, List<Integer> tagIDs,
+	                      Object oFile) throws Exception;
 
 	List<SubjectQuestionStat> getQuestionStats();
 }

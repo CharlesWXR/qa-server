@@ -2,7 +2,6 @@ package edu.njnu.qaserver.controller;
 
 import edu.njnu.qaserver.annotation.ResponseResult;
 import edu.njnu.qaserver.pojo.AnswerVO;
-import edu.njnu.qaserver.pojo.Question;
 import edu.njnu.qaserver.pojo.QuestionBriefsVO;
 import edu.njnu.qaserver.pojo.SubjectQuestionStat;
 import edu.njnu.qaserver.pojo.QuestionVO;
@@ -14,9 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/question")
@@ -66,9 +64,20 @@ public class QuestionController {
 		MultipartFile file = ((MultipartHttpServletRequest) request).getFile("img");
 		int credit = Integer.parseInt(request.getParameter("credit"));
 		int userID = Integer.parseInt(request.getParameter("user_id"));
+		String tagRaw = request.getParameter("tags");
+		List<Integer> tags = null;
+		if (tagRaw != null && tagRaw.length() > 0) {
+			String[] tagStrings = tagRaw.split(",");
+			tags = Arrays.stream(tagStrings)
+							.map(s -> Integer.parseInt(s))
+							.collect(Collectors.toList());
+		}
+
 
 		Map<String, Object> res = new HashMap<String, Object>();
-		res.put("url", questionService.putNewQuestion(title, mainContent, subject, credit, userID, file));
+		res.put("url",
+				questionService.putNewQuestion(title, mainContent, subject,
+						credit, userID, tags, file));
 		return res;
 	}
 

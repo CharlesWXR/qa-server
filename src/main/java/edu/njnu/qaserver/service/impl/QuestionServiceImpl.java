@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.njnu.qaserver.mapper.QuestionMapper;
 import edu.njnu.qaserver.pojo.*;
+import edu.njnu.qaserver.service.AnswerService;
 import edu.njnu.qaserver.service.QuestionService;
 import edu.njnu.qaserver.service.SubjectService;
 import edu.njnu.qaserver.service.TagService;
@@ -27,6 +28,9 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Autowired
 	private TagService tagService;
+
+	@Autowired
+	private AnswerService answerService;
 
 	@Autowired
 	private MinIOUtil MinIOUtil;
@@ -151,20 +155,20 @@ public class QuestionServiceImpl implements QuestionService {
 				.peek(t -> t.setImg(MinIOUtil.getFileUrl(t.getImg())))
 				.map(t ->
 						new QuestionBriefVO(t,
-						tagService.getTagsByQuestionID(t.getQuestionId())
-								.stream()
-								.map(new Function<Tag, SubjectTagPairVO>() {
+								answerService.getAnswerCountByQuestionID(t.getQuestionId()),
+								tagService.getTagsByQuestionID(t.getQuestionId())
+										.stream()
+										.map(new Function<Tag, SubjectTagPairVO>() {
 
-									@Override
-									public SubjectTagPairVO apply(Tag tag) {
-										SubjectTagPairVO res = new SubjectTagPairVO();
-										res.setSubject_name(subjectService.getSubjectNameByID(tag.getSubjectId()));
-										res.setTag_name(tag.getName());
-										return res;
-									}
-								})
-								.collect(Collectors.toList())
-						)
+											@Override
+											public SubjectTagPairVO apply(Tag tag) {
+												SubjectTagPairVO res = new SubjectTagPairVO();
+												res.setSubject_name(subjectService.getSubjectNameByID(tag.getSubjectId()));
+												res.setTag_name(tag.getName());
+												return res;
+											}
+										})
+										.collect(Collectors.toList()))
 				)
 				.collect(Collectors.toList());
 
@@ -197,7 +201,7 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	public String putNewQuestion(String title, String mainContent,
 	                             String subject, int credit,
-	                             int userID, Object oFile)
+	                             int userID, List<Integer> tagIDs, Object oFile)
 			throws Exception {
 		Question question = new Question();
 		question.setTitle(title);
@@ -216,6 +220,15 @@ public class QuestionServiceImpl implements QuestionService {
 		}
 
 		question.insert();
+
+		if (tagIDs != null) {
+			QuestionTagLinker qtl = new QuestionTagLinker();
+			qtl.setQuestionId(question.getQuestionId());
+			for (Integer id : tagIDs) {
+				qtl.setTagId(id);
+				qtl.insert();
+			}
+		}
 		return url;
 	}
 

@@ -29,4 +29,12 @@ public class AnswerServiceImpl implements AnswerService {
 
         return answerList;
     }
+
+    @Override
+    public long getAnswerCountByQuestionID(int questionID) {
+        QueryWrapper<AnswerVO> answerWrapper = new QueryWrapper<AnswerVO>();
+        answerWrapper.eq("question_id", questionID);
+
+        return answerMapper.selectCount(answerWrapper);
+    }
 }

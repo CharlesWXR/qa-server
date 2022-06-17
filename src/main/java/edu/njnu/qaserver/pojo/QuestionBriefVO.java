@@ -10,8 +10,8 @@ public class QuestionBriefVO {
 	private int question_id;
 	private String title;
 	private String content;
-	private int like_count;
-	private int ans_count;
+	private long like_count;
+	private long ans_count;
 	private int credit;
 	private String img_src;
 	private Date time;
@@ -35,8 +35,9 @@ public class QuestionBriefVO {
 		this.subject_name = subjectName;
 	}
 
-	public QuestionBriefVO(Question q, List<SubjectTagPairVO> tags) {
+	public QuestionBriefVO(Question q, long ansCount, List<SubjectTagPairVO> tags) {
 		this(q);
+		this.ans_count = ansCount;
 		this.tags = tags;
 	}
 }
