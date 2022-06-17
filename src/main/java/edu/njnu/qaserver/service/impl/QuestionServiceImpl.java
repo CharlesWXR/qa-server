@@ -6,6 +6,7 @@ import edu.njnu.qaserver.mapper.QuestionMapper;
 import edu.njnu.qaserver.pojo.Question;
 import edu.njnu.qaserver.pojo.QuestionBriefVO;
 import edu.njnu.qaserver.pojo.QuestionBriefsVO;
+import edu.njnu.qaserver.pojo.SubjectQuestionStat;
 import edu.njnu.qaserver.service.QuestionService;
 import edu.njnu.qaserver.service.SubjectService;
 import edu.njnu.qaserver.utils.FileUploadUtil;
@@ -109,5 +110,14 @@ public class QuestionServiceImpl implements QuestionService {
 
         question.insert();
         return url;
+    }
+
+    @Override
+    public List<SubjectQuestionStat> getQuestionStats() {
+        List<SubjectQuestionStat> stats = questionMapper.getQuestionCounts();
+        stats = stats.stream()
+                .peek(t -> t.setSubjectName(subjectService.getSubjectNameByID(t.getSubjectID())))
+                .collect(Collectors.toList());
+        return stats;
     }
 }

@@ -2,6 +2,7 @@ package edu.njnu.qaserver.controller;
 
 import edu.njnu.qaserver.annotation.ResponseResult;
 import edu.njnu.qaserver.pojo.QuestionBriefsVO;
+import edu.njnu.qaserver.pojo.SubjectQuestionStat;
 import edu.njnu.qaserver.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,6 +34,12 @@ public class QuestionController {
     @RequestMapping(value = "/{userID}", method = RequestMethod.GET)
     public QuestionBriefsVO getQuestionByUser(@PathVariable int userID) {
         return questionService.getQuestionByUser(userID);
+    }
+
+    @ResponseResult
+    @RequestMapping(value = "/count", method = RequestMethod.GET)
+    public List<SubjectQuestionStat> getQuestionStats() {
+        return questionService.getQuestionStats();
     }
 
     @ResponseResult

@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.njnu.qaserver.mapper.QuestionMapper">
+    <select id="getQuestionCounts" resultMap="statMap">
+        SELECT
+            subject_id,
+            count(subject_id) as `count`
+        FROM
+            question
+        GROUP BY
+            subject_id
+    </select>
+
+    <resultMap id="statMap" type="edu.njnu.qaserver.pojo.SubjectQuestionStat">
+        <result property="subjectID" column="subject_id" />
+        <result property="count" column="count" />
+    </resultMap>
 </mapper>

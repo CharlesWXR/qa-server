@@ -17,6 +17,7 @@ public class User extends Model<User> {
 	private String email;
 	private String phone;
 	private String gender;
+	private String avatar;
 	private int privilege;
 	private int classId;
 }
