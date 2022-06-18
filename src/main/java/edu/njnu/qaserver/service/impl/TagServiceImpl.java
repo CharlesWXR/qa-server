@@ -8,6 +8,7 @@ import edu.njnu.qaserver.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,11 +26,13 @@ public class TagServiceImpl implements TagService {
 	private Map<Integer, List<Tag>> subjectTagMapper = null;
 	private Map<String, List<Tag>> subjectNameTagMapper = null;
 
+	@PostConstruct
+	public void init() {
+		loadTags();
+	}
+
 	@Override
 	public List<Tag> getTagsBySubjectID(int id) {
-		if (subjectTagMapper == null) {
-			loadTags();
-		}
 		return subjectTagMapper.get(id);
 	}
 
@@ -40,10 +43,6 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public Map<String, List<TagVO>> getTags() {
-		if (subjectNameTagMapper == null) {
-			loadTags();
-		}
-
 		Map<String, List<TagVO>> res = new HashMap<String, List<TagVO>>();
 		subjectNameTagMapper.forEach((k, v) -> {
 			res.put(k, v.stream().map(TagVO::new).collect(Collectors.toList()));
