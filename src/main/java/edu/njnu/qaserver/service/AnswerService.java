@@ -1,5 +1,6 @@
 package edu.njnu.qaserver.service;
 
+import edu.njnu.qaserver.pojo.Answer;
 import edu.njnu.qaserver.pojo.AnswerVO;
 
 import java.util.List;

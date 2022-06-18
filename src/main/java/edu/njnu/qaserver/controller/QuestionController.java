@@ -1,10 +1,7 @@
 package edu.njnu.qaserver.controller;
 
 import edu.njnu.qaserver.annotation.ResponseResult;
-import edu.njnu.qaserver.pojo.AnswerVO;
-import edu.njnu.qaserver.pojo.QuestionBriefsVO;
-import edu.njnu.qaserver.pojo.SubjectQuestionStat;
-import edu.njnu.qaserver.pojo.QuestionVO;
+import edu.njnu.qaserver.pojo.*;
 import edu.njnu.qaserver.service.AnswerService;
 import edu.njnu.qaserver.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;

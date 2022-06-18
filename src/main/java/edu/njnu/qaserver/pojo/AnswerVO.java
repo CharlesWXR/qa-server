@@ -1,23 +1,22 @@
 package edu.njnu.qaserver.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-@TableName(value = "answer")
-public class AnswerVO extends Model<AnswerVO> {
-    @TableId(type = IdType.AUTO)
-    private int answerId;
+public class AnswerVO {
+	private Date time;
+	private String main_content;
+	private String img;
+	private boolean std;
+	private String username;
 
-    private Date time;
-    private String mainContent;
-    private String img;
-    private boolean std;
-    private int userId;
-    private int questionId;
+	public AnswerVO(Answer answer, String username) {
+		this.time = answer.getTime();
+		this.main_content = answer.getMainContent();
+		this.img = answer.getImg();
+		this.std = answer.isStd();
+		this.username = username;
+	}
 }

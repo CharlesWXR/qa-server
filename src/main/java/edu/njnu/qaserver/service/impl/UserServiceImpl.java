@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService {
         user.update(updateWrapper);
         return user;
     }
+
+    @Override
+    public String getUsernameByID(int userID) {
+        return userMapper.selectById(userID).getName();
+    }
 }

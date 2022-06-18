@@ -8,4 +8,6 @@ public interface UserService {
     Object register(String name, String password);
 
     Object editProfile(int userID, String name, String email, String phone, String gender, String home);
+
+    String getUsernameByID(int userID);
 }
