@@ -24,7 +24,7 @@ logging:
   config: logback.xml
 
 minio:
-  server: http://43.142.72.129:9000
+  server: http://bosswang.live:9000
   access-key: minioadmin
   secret-key: minioadmin
   bucket: question-answer-system
